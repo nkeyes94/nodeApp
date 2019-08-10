@@ -42,19 +42,22 @@ function browseListings(){
                     }
                 }
             }
-        ]).then(function(res){
+        ]).then(function(resOne){
             inquirer.prompt([
                 {
                     message: "How many would you like to purchase?",
                     name: "amount",
                     type: "input"
                 }
-            ]).then(function(res){
+            ]).then(function(resTwo){
                 if(res.amount > 2){     //NOTE 2 IS THE ITEM AMOUNT FROM DB -- PLACE HOLDER
                     console.log("Error, cannot purchase that many. There are only "+ res.amount +" left");
                 } else if(res.amount < 2){  //NOTE 2 IS THE ITEM AMOUNT FROM DB -- PLACE HOLDE
                     console.log("Making purchase...");
                     //subtract amount purchased from the amount in the db
+                    connection.query(
+                        "SELECT amount FROM SET",
+                    )
                 }
             })
         })
@@ -69,15 +72,32 @@ function postListing(){
             type: "input",
             name: "itemName"
         }
-    ]).then(function(res){
+    ]).then(function(resOne){
         inquirer.prompt([
             {
                 message: "How many do you wish to sell?",
                 type: "input",
                 name: "itemAmount"
             }
-        ]).then(function(res){
-            //POST TO DB
+        ]).then(function(resTwo){
+            inquirer.prompt([
+                {
+                    message: "How much do you wish to sell each item for?",
+                    type: "input",
+                    name: "itemPrice"
+                }
+            ]).then(function(resThree){
+                let totalAmount = resTwo.itemAmount * resThree.itemPrice;
+                console.log("You will make "+ totalAmount +" by selling these!");
+                connection.query(
+                    "INSERT INTO listings SET ?",
+                    {
+                        item_name: resOne.itemName,
+                        amount: resTwo.itemAmount,
+                        price: resThree.itemPrice
+                    }
+                )
+            })
         })
     })
 }
