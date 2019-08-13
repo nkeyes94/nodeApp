@@ -55,19 +55,53 @@ function browseListings(){
         ]).then(function(resOne){
             //After the first prompt, allow the user to select the amount to buy
             console.log(resOne.choice);
-            connection.query("SELECT * FROM listings WHERE item_name="+resOne.choice, function(err, itemResult){
+            connection.query("SELECT * FROM listings WHERE item_name=" + '\u0022' + resOne.choice + '\u0022', function(err, itemResult){
                 if(err) throw err
                 console.log(itemResult);
+                let selectedItem = itemResult[0].item_name;
+                console.log("Item name: "+ selectedItem);
+                console.log(selectedItem+ " amount available: "+ itemResult[0].amount);
+                console.log(selectedItem+ " price: "+ itemResult[0].price);
                 inquirer.prompt([
                     {
-                        message: "Item selected: "+itemResult.item_name,
-                        // message: "Item amount: "+ resOne.amount,
-                        // message: "Item price: "+ resOne.price,
-                        // message: "How many would you like to purchase?",
-                        type: "input",
-                        name: "purchaseChoice"
+                        message: "How many would you like to purchase?",
+                        name: "amount",
+                        input: "name"
                     }
-                ])
+                ]).then(function(resTwo){
+                    console.log("resTwo: "+ resTwo.amount);
+                    let selectedAmount = resTwo.amount;
+                    if(selectedAmount > itemResult[0].amount){
+                        console.log("Sorry, you've selected "+ selectedAmount +" to purchase, but there are only "+ itemResult[0].amount +" available.")
+                    } else if(selectedAmount < itemResult[0].amount){
+                        console.log("You've selected to purchase "+ selectedAmount +" .");
+                        let totalCost = selectedAmount * itemResult[0].price;
+                        console.log("Your total for this purchase is: "+ totalCost)
+                        inquirer.prompt([
+                            {
+                                message: "Would you like to proceed?",
+                                type: "list",
+                                choices: ["Yes", "No"],
+                                name: "confirmChoice"
+                            }
+                        ]).then(function(confirmation){
+                            console.log("conf: "+confirmation.confirmChoice);
+                            if(confirmation.confirmChoice == "No"){
+                                console.log("Exiting program");
+                            } else if(confirmation.confirmChoice == "Yes") {
+                                console.log("Please wait while the purchase is made...");
+                                let itemsLeft = itemResult[0].amount - selectedAmount;
+                                console.log("items left: "+ itemsLeft)
+                                connection.query(
+                                    "UPDATE listings SET amount="+ itemsLeft+ " WHERE item_name=" + '\u0022' + resOne.choice + '\u0022', function(err, updateRes){
+                                        if(err) throw err;
+                                        console.log(updateRes.affectedRows + " updated");
+                                    }
+                                )
+                            }
+                        })
+                    }
+                })
             })
         })
     });
