@@ -9,7 +9,7 @@ var connection = mysql.createConnection(
         host: "localhost",
         port: 3306,
         user: "root",
-        password: "coleakenta",                           //Fill in password later
+        password: "",                           //Fill in password later
         database: "natemart_db"
     }
 )
@@ -132,7 +132,6 @@ function postListing(){
             ]).then(function(resThree){
                 let totalAmount = resTwo.itemAmount * resThree.itemPrice;
                 console.log("You will make "+ totalAmount +" by selling these!");
-                console.log("BEFORE CONNECTION QUERY");
                 console.log("Item Name: "+ resOne.itemName);
                 console.log("Item amount: "+ resTwo.itemAmount);
                 console.log("Item price: "+ resThree.itemPrice);
