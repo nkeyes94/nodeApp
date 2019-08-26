@@ -7,6 +7,6 @@ CREATE TABLE listings(
 	id INT NOT NULL AUTO_INCREMENT,
     item_name VARCHAR(100) NOT NULL,
     amount INT NOT NULL,
-    price DECIMAL(10,2) NOT NULL,
+    price INT NOT NULL,
     PRIMARY KEY(id)
 );

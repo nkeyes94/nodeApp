@@ -1,1 +1,34 @@
 # nodeApp
+
+-Welcome to NateMart! This application is a node app designed for the sale of items on the internet.
+-Inside this directory, you'll find several files. A brief description of each:
+    -.gitignore:
+        -This is the git ignore file, as to not pass the node modules to github.
+    -database.sql
+        -This is the database schema for NateMart. The schema includes several fields for the table:
+            -Item ID
+                -The ID is set to auto-increment
+            -Item name 
+            -Amount of item
+            -Item price 
+            -Primary key set to the item id. 
+    -logic.js
+        -As the name suggests, this is the logic for the application.
+        -The first section of code creates a prompt which gives the user an option to buy or sell a product, and waits for the user input.
+            -If the user selects to purchase a product:
+                -The browseListings() function will be launched.
+                    -This function will then access the database, pull all the listings from it, and put them into an array, which will then be displayed in the node application
+                    -The user may scroll through the listings using the arrow keys
+                    -Once an item is selected, the user will be asked how many of the item they would like to purchase
+                    -After the amount is entered, the application will see if its a valid operation by checking the amount available and comparing it to the amount requested
+                        -If the amount requested is greater than the amount available, an error will be displayed
+                        -If the amount requested is lower than the amount available, the application will proceed.
+                            -After a valid amount is entered, the application will then calculate the total cost of all of the items, and ask the user if they'd like to proceed
+                                -If the user wished to proceed, then the amount purchased will be subtracted from the database, and updated. 
+            -If the user selects to post a listing:
+                -The postListing() function will be launched
+                    -This function collects information from the user (Item name, amount, price, etc) then passes it to the database. 
+                        -The first prompt asks the user what the name of their item is
+                        -The next: the amount of items theyre selling
+                        -The following: The price of the item
+                        -If multiple items are posted, a calcuilation will be done to let the seller know how much they will make if all items are sold. 
